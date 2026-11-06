@@ -5,13 +5,16 @@ import CommandCenter from './components/CommandCenter.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import { checkServer, warmupBrowser } from './lib/detector.js';
 
-function StatusChip({ ok, pending, label }) {
-  const tone = pending ? 'bg-slate-500/10 text-slate-300 border-slate-600' : ok ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30' : 'bg-amber-500/10 text-amber-300 border-amber-500/30';
+const NAV = [
+  { id: 'command', label: 'Command Center', short: 'Deteksi', icon: ScanLine },
+  { id: 'dashboard', label: 'Dashboard', short: 'Dashboard', icon: LayoutDashboard },
+];
+
+function Logo({ className = '' }) {
   return (
-    <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border ${tone}`}>
-      <span className={`h-2 w-2 rounded-full ${pending ? 'bg-slate-400' : ok ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-      {label}
-    </span>
+    <div className={`flex items-center justify-center rounded-2xl bg-[#F5EBC9] text-ink ${className}`}>
+      <Recycle className="h-5 w-5" strokeWidth={2.4} />
+    </div>
   );
 }
 
@@ -33,47 +36,77 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-emerald-500 flex items-center justify-center text-slate-950">
-              <Recycle className="h-5 w-5" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold tracking-tight text-white leading-tight">SariRaga</h1>
-              <p className="text-[11px] text-slate-400">Smart AI Recycling &amp; Garbage Analytics</p>
-            </div>
-          </div>
-          <nav className="flex gap-2 order-3 sm:order-none w-full sm:w-auto">
-            <button onClick={() => setTab('command')} className={`tab flex-1 sm:flex-none justify-center ${tab === 'command' ? 'tab-active' : ''}`}>
-              <ScanLine className="h-4 w-4" /> Command Center
-            </button>
-            <button onClick={() => setTab('dashboard')} className={`tab flex-1 sm:flex-none justify-center ${tab === 'dashboard' ? 'tab-active' : ''}`}>
-              <LayoutDashboard className="h-4 w-4" /> Dashboard
-            </button>
-          </nav>
-          <div className="flex flex-wrap gap-2">
-            <StatusChip pending={checking} ok={!!serverHealth} label={checking ? 'AI Server: cek…' : serverHealth ? 'AI Server: online' : 'AI Server: offline'} />
-            <StatusChip pending={browserReady === null} ok={browserReady} label={browserReady === null ? 'AI Browser: memuat…' : browserReady ? 'AI Browser: siap' : 'AI Browser: gagal'} />
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen">
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:flex fixed inset-y-0 left-0 z-30 w-[92px] flex-col items-center bg-ink py-6">
+        <Logo className="h-12 w-12" />
+        <nav className="mt-12 flex w-full flex-col gap-2" aria-label="Navigasi utama">
+          {NAV.map(({ id, short, label, icon: Icon }) => {
+            const active = tab === id;
+            return (
+              <button
+                key={id}
+                onClick={() => setTab(id)}
+                aria-current={active ? 'page' : undefined}
+                title={label}
+                className={`relative mx-auto flex w-[76px] flex-col items-center gap-1.5 rounded-2xl py-3 text-[11px] font-medium transition-colors ${
+                  active ? 'bg-white/10 text-white' : 'text-ink-faint hover:text-white'
+                }`}
+              >
+                {active && <span className="absolute -left-2 top-3 bottom-3 w-[3px] rounded-full bg-white" />}
+                <Icon className="h-5 w-5" />
+                {short}
+              </button>
+            );
+          })}
+        </nav>
+      </aside>
 
-      <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 flex-1">
-        {tab === 'command' ? (
-          <CommandCenter engine={engine} setEngine={setEngine} serverHealth={serverHealth} onLogged={() => setRefreshKey((k) => k + 1)} />
-        ) : (
-          <Dashboard refreshKey={refreshKey} />
-        )}
-      </main>
+      <div className="lg:pl-[92px] flex min-h-screen flex-col">
+        {/* Mobile top bar */}
+        <header className="lg:hidden flex items-center gap-3 px-4 pt-4">
+          <Logo className="h-10 w-10" />
+          <div>
+            <p className="text-base font-bold leading-tight">SariRaga</p>
+            <p className="text-xs text-ink-soft">Smart AI Recycling &amp; Garbage Analytics</p>
+          </div>
+        </header>
 
-      <footer className="border-t border-slate-800 text-[11px] text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap justify-between gap-2">
-          <span>Tim SariRaga — FTI UKSW • AI Web Innovation Challenge Bali DigiFest 2026</span>
-          <span>YOLO11n (ONNX) • FastAPI • Vercel Functions • Supabase</span>
-        </div>
-      </footer>
+        <main className="mx-auto w-full max-w-[1320px] flex-1 px-4 pt-6 pb-8 sm:px-8 lg:pt-10 lg:pb-10">
+          {tab === 'command' ? (
+            <CommandCenter
+              engine={engine}
+              setEngine={setEngine}
+              serverHealth={serverHealth}
+              checking={checking}
+              browserReady={browserReady}
+              onLogged={() => setRefreshKey((k) => k + 1)}
+            />
+          ) : (
+            <Dashboard refreshKey={refreshKey} />
+          )}
+        </main>
+
+        <footer className="mx-auto w-full max-w-[1320px] px-4 pb-28 text-xs text-ink-faint sm:px-8 lg:pb-8">
+          Tim SariRaga, FTI UKSW. AI Web Innovation Challenge Bali DigiFest 2026.
+        </footer>
+      </div>
+
+      {/* Mobile bottom navigation */}
+      <nav className="lg:hidden fixed inset-x-4 bottom-4 z-30 flex gap-1 rounded-full bg-ink p-1.5 shadow-lg" aria-label="Navigasi utama">
+        {NAV.map(({ id, short, icon: Icon }) => (
+          <button
+            key={id}
+            onClick={() => setTab(id)}
+            aria-current={tab === id ? 'page' : undefined}
+            className={`flex h-11 flex-1 items-center justify-center gap-2 rounded-full text-sm font-medium transition-colors ${
+              tab === id ? 'bg-white text-ink' : 'text-ink-faint'
+            }`}
+          >
+            <Icon className="h-4 w-4" /> {short}
+          </button>
+        ))}
+      </nav>
     </div>
   );
 }

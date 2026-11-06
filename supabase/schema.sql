@@ -1,4 +1,4 @@
--- supabase/schema.sql — run once in Supabase Dashboard > SQL Editor
+-- supabase/schema.sql: run once in Supabase Dashboard > SQL Editor
 create table if not exists public.detection_logs (
   id              bigint generated always as identity primary key,
   created_at      timestamptz not null default now(),

@@ -1,4 +1,4 @@
-// client/api/detections.js — Vercel Function (also mounted by server/server.js)
+// client/api/detections.js: Vercel Function (also mounted by server/server.js)
 // GET  /api/detections?limit=20  -> recent detection logs (with visual evidence snapshot)
 // POST /api/detections           -> store one detection event + server-side Waste-to-Wealth valuation
 import { insertDetection, listDetections, parseDetectionPayload, sendError } from './_lib/waste.js';

@@ -4,15 +4,27 @@
 @tailwind utilities;
 
 body {
-  @apply bg-slate-950 text-slate-100 antialiased;
-  font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  @apply bg-canvas text-ink antialiased;
+  font-feature-settings: 'tnum' 1;
+}
+
+:focus-visible {
+  outline: 2px solid #1F7A55;
+  outline-offset: 2px;
 }
 
 @layer components {
-  .card { @apply bg-slate-900 border border-slate-800 rounded-xl; }
-  .chip { @apply inline-flex items-center px-2 py-0.5 rounded text-[11px] text-white; }
-  .tab { @apply inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-700 bg-slate-800/60 text-slate-300 hover:bg-slate-800 transition disabled:opacity-40 disabled:cursor-not-allowed; }
-  .tab-active { @apply bg-emerald-600 border-emerald-500 text-white hover:bg-emerald-600; }
-  .btn-primary { @apply inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition disabled:opacity-40 disabled:cursor-not-allowed; }
-  .btn-secondary { @apply inline-flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition disabled:opacity-40; }
+  .card { @apply bg-white border border-line rounded-card; }
+  .card-title { @apply text-base font-semibold text-ink; }
+  .muted { @apply text-sm text-ink-soft; }
+
+  .btn-primary { @apply inline-flex items-center justify-center gap-2 h-10 px-4 text-sm font-semibold rounded-full bg-brand text-white hover:bg-brand-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed; }
+  .btn-secondary { @apply inline-flex items-center justify-center gap-2 h-10 px-4 text-sm font-medium rounded-full bg-white text-ink border border-line hover:bg-canvas transition-colors disabled:opacity-40 disabled:cursor-not-allowed; }
+  .btn-icon { @apply inline-flex items-center justify-center h-10 w-10 rounded-full bg-white text-ink border border-line hover:bg-canvas transition-colors disabled:opacity-40; }
+
+  .seg { @apply inline-flex items-center gap-1 p-1 rounded-full bg-canvas; }
+  .seg-item { @apply inline-flex items-center justify-center gap-2 h-9 px-3.5 text-sm font-medium rounded-full text-ink-soft hover:text-ink transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-ink-soft; }
+  .seg-item-active { @apply bg-white text-ink shadow-[0_1px_2px_rgba(23,32,28,0.08)]; }
+
+  .pill { @apply inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full text-xs font-medium whitespace-nowrap; }
 }

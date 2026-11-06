@@ -1,11 +1,11 @@
-// client/api/_lib/categories.js — dependency-free, shared by frontend and API.
+// client/api/_lib/categories.js: dependency-free, shared by frontend and API.
 // Categories = classes of the SariRaga YOLO11n model (botol_plastik, kaleng_aluminium, kardus).
 // Waste-to-Wealth reference table (estimates: average weight per item, average bank sampah buy price).
 // Adjust prices here to match the local Bank Sampah price list.
 export const CATEGORIES = {
   botol: { label: 'Botol Plastik', color: '#10b981', avgWeightKg: 0.025, pricePerKgIdr: 3500 },
   kaleng: { label: 'Kaleng Aluminium', color: '#f59e0b', avgWeightKg: 0.015, pricePerKgIdr: 10000 },
-  kardus: { label: 'Kardus / Karton', color: '#3b82f6', avgWeightKg: 0.05, pricePerKgIdr: 2000 },
+  kardus: { label: 'Kardus / Karton', color: '#a0714b', avgWeightKg: 0.05, pricePerKgIdr: 2000 },
 };
 export const IDR_PER_POINT = 100;
 

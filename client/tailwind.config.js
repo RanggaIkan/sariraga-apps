@@ -7,13 +7,19 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
+      },
       colors: {
-        sariraga: {
-          50: '#ecfdf5',
-          500: '#10b981',
-          600: '#059669',
-          900: '#064e3b',
-        },
+        canvas: '#EEF1F4',
+        line: '#E3E7EB',
+        ink: { DEFAULT: '#17201C', soft: '#56625C', faint: '#8A958F' },
+        brand: { DEFAULT: '#1F7A55', hover: '#196446', tint: '#E3F1EA' },
+        sky: { DEFAULT: '#E3EDF8', ink: '#2F65A6' },
+        pastel: { botol: '#DCF2E6', kaleng: '#FAEDCD', kardus: '#EFE4D8' },
+      },
+      borderRadius: {
+        card: '20px',
       },
     },
   },

@@ -1,4 +1,4 @@
-// client/api/health.js — Vercel Function: GET /api/health
+// client/api/health.js: Vercel Function: GET /api/health
 import { storageMode } from './_lib/waste.js';
 
 export default function handler(req, res) {

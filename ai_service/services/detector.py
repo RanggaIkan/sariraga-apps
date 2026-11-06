@@ -21,7 +21,7 @@ INPUT_SIZE = 640
 CLASSES = [  # colors are BGR
     {"id": "botol", "label": "Botol Plastik", "color": (129, 185, 16)},
     {"id": "kaleng", "label": "Kaleng Aluminium", "color": (11, 158, 245)},
-    {"id": "kardus", "label": "Kardus / Karton", "color": (246, 130, 59)},
+    {"id": "kardus", "label": "Kardus / Karton", "color": (75, 113, 160)},
 ]
 DEFAULT_CONF = 0.25
 DEFAULT_IOU = 0.45

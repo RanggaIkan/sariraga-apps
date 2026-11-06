@@ -1,4 +1,4 @@
-// client/api/stats.js — Vercel Function (also mounted by server/server.js)
+// client/api/stats.js: Vercel Function (also mounted by server/server.js)
 // GET /api/stats -> waste composition, Waste-to-Wealth valuation, 24h trend
 import { CATEGORIES, computeStats, storageMode } from './_lib/waste.js';
 

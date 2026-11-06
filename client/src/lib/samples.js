@@ -1,4 +1,4 @@
-// client/src/lib/samples.js — CC-licensed sample photos (Wikimedia Commons) for demo & conveyor simulation
+// client/src/lib/samples.js: CC-licensed sample photos (Wikimedia Commons) for demo & conveyor simulation
 export const SAMPLES = [
   {
     "src": "/samples/tumpukan-botol-1.jpg",

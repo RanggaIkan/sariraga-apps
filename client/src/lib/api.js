@@ -1,4 +1,4 @@
-// client/src/lib/api.js — Core API client (Vercel Functions in prod, Express via Vite proxy in dev)
+// client/src/lib/api.js: Core API client (Vercel Functions in prod, Express via Vite proxy in dev)
 const API = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 
 async function request(path, options) {

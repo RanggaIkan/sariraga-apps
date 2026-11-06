@@ -94,7 +94,7 @@ export async function computeStats() {
   const hourly = Array.from({ length: 24 }, (_, i) => {
     const t = new Date(now - (23 - i) * 3600_000);
     t.setMinutes(0, 0, 0);
-    return { ts: t.toISOString(), items: 0 };
+    return { ts: t.toISOString(), items: 0, valueIdr: 0 };
   });
   let totalItems = 0;
   let totalLogs = 0;
@@ -112,7 +112,10 @@ export async function computeStats() {
       if (!c) continue;
       c.count += 1;
       totalItems += 1;
-      if (hoursAgo >= 0 && hoursAgo < 24) hourly[23 - hoursAgo].items += 1;
+      if (hoursAgo >= 0 && hoursAgo < 24) {
+        hourly[23 - hoursAgo].items += 1;
+        hourly[23 - hoursAgo].valueIdr += c.avgWeightKg * c.pricePerKgIdr;
+      }
       if (baliDay(ts) === todayStr) todayItems += 1;
     }
   }
