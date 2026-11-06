@@ -1,4 +1,4 @@
-// Copies the onnxruntime-web runtime (.mjs + .wasm) to public/ort so it is served as-is from our own origin.
+// Copies the onnxruntime-web runtime (.mjs + .wasm) to public/ort before build, served as-is from our own origin.
 // Needed for multi-threaded WASM: ORT starts its worker threads from this .mjs file.
 import { cpSync, mkdirSync } from 'node:fs';
 

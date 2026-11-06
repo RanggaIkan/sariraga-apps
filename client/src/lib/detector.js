@@ -26,11 +26,18 @@ const BROWSER_MODEL_NAME = 'SariRaga YOLO11n (WaRP)';
 const BROWSER_CLASSES = ['botol', 'kaleng', 'kardus']; // model idx -> category
 const SIZE = 640;
 
-// ORT runtime files are served as-is from /ort/ (copied by scripts/copy-ort.mjs before dev/build).
-// Same origin is required for the worker threads of multi-threaded WASM.
-ort.env.wasm.wasmPaths = '/ort/';
-// Multi-threaded WASM needs cross-origin isolation (COOP/COEP headers in vercel.json / vite.config.js).
-ort.env.wasm.numThreads = globalThis.crossOriginIsolated ? Math.min(4, navigator.hardwareConcurrency || 4) : 1;
+// Production: ORT runtime is served as-is from /ort/ (copied by scripts/copy-ort.mjs before build).
+// Same origin is required for the worker threads of multi-threaded WASM, which also needs
+// cross-origin isolation (COOP/COEP headers in vercel.json / vite.config.js).
+// Dev: Vite refuses to serve /public .mjs files as module imports, so load the runtime from the CDN
+// single-threaded (worker threads cannot start from a cross-origin script).
+if (import.meta.env.DEV) {
+  ort.env.wasm.wasmPaths = `https://cdn.jsdelivr.net/npm/onnxruntime-web@${ort.env.versions.web}/dist/`;
+  ort.env.wasm.numThreads = 1;
+} else {
+  ort.env.wasm.wasmPaths = '/ort/';
+  ort.env.wasm.numThreads = globalThis.crossOriginIsolated ? Math.min(4, navigator.hardwareConcurrency || 4) : 1;
+}
 
 // ---------- server engine ----------
 export async function checkServer() {
