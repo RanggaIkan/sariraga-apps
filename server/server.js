@@ -1,36 +1,32 @@
 // server/server.js
+// Local Core API (Express). Mounts the exact same handlers that run as Vercel Functions
+// in client/api/, so local and deployed behaviour is identical.
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
 
-const wasteRoutes = require('./routes/wasteRoutes');
-
-const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Explicit CORS configuration for Frontend (Vite 5173 / CRA 3000)
-app.use(
-  cors({
-    origin: [
-      'http://localhost:5173',
-      'http://127.0.0.1:5173',
-      'http://localhost:3000',
-      'http://127.0.0.1:3000',
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true,
-  })
-);
-app.use(express.json());
+async function start() {
+  const { default: detections } = await import('../client/api/detections.js');
+  const { default: stats } = await import('../client/api/stats.js');
+  const { default: health } = await import('../client/api/health.js');
+  const { storageMode } = await import('../client/api/_lib/waste.js');
 
-// Main API Routes
-app.use('/api', wasteRoutes);
+  const app = express();
+  app.use(cors());
+  app.use(express.json({ limit: '1mb' }));
 
-// Health Check Endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', service: 'SariRaga Backend API', port: PORT });
-});
+  app.all('/api/detections', detections);
+  app.get('/api/stats', stats);
+  app.get(['/health', '/api/health'], health);
 
-app.listen(PORT, () => {
-  console.log(`[SariRaga Backend] Server running on http://localhost:${PORT}`);
+  app.listen(PORT, () => {
+    console.log(`[SariRaga Core API] http://localhost:${PORT} (storage: ${storageMode})`);
+  });
+}
+
+start().catch((err) => {
+  console.error(err);
+  process.exit(1);
 });

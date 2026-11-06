@@ -33,6 +33,9 @@ client/.env
 *.onnx
 *.weights
 !ai_service/models/.gitkeep
+# SariRaga YOLO11n model (10 MB) is committed so deploys work out of the box
+!ai_service/models/sariraga_yolo11n.onnx
+!client/public/models/sariraga_yolo11n.onnx
 
 # Logs & OS Metadata
 npm-debug.log*
@@ -42,3 +45,6 @@ yarn-error.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# Vercel
+.vercel
