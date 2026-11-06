@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Camera, Cctv, ImageUp, Pause, Play, Save, Upload, Video } from 'lucide-react';
 import { CATEGORIES, valuate } from '../../api/_lib/categories.js';
-import { detect, engineModelName, AI_SERVICE_URL } from '../lib/detector.js';
+import { detect, engineModelName, AI_SERVICE_URL, browserBackend } from '../lib/detector.js';
 import { formatIdr, postLog } from '../lib/api.js';
 import { SAMPLES } from '../lib/samples.js';
 import { CAT_STYLE } from '../lib/categoryStyle.js';
@@ -315,7 +315,7 @@ export default function CommandCenter({ engine, setEngine, serverHealth, checkin
               <p className="muted">Rekaman langsung dari kamera di mesin server AI, ditandai oleh FastAPI dan OpenCV.</p>
             ) : (
               <div className="flex gap-8">
-                <Stat label="Mesin" value={engine === 'server' ? 'Server AI' : 'Browser'} />
+                <Stat label="Mesin" value={engine === 'server' ? 'Server AI' : browserBackend === 'webgpu' ? 'Browser (GPU)' : 'Browser (CPU)'} />
                 <Stat label="Waktu proses" value={`${perf.ms} ms`} />
                 {live && <Stat label="Kecepatan" value={`${perf.fps} FPS`} />}
               </div>

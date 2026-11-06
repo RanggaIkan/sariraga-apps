@@ -50,7 +50,7 @@ Fitur yang sudah berfungsi pada versi ini:
 | Hasil test | mAP50 **0.584**, mAP50-95 0.432, precision 0.674, recall 0.484 |
 | Input | Frame gambar (JPEG dari kamera, webcam, atau foto unggahan) |
 | Output | Daftar objek: kategori, keyakinan, bounding box `[x1, y1, x2, y2]` |
-| Kecepatan | Sekitar 35 sampai 45 ms/frame di AI server (CPU). Sekitar 250 sampai 350 ms/frame di browser (WASM) |
+| Kecepatan | Sekitar 35 sampai 45 ms/frame di AI server (CPU). Di browser: WebGPU bila tersedia, jika tidak WASM multi-thread sekitar 100 ms/frame (sekitar 280 ms tanpa cross-origin isolation, misalnya di Safari) |
 | File model | [`ai_service/models/sariraga_yolo11n.onnx`](ai_service/models/sariraga_yolo11n.onnx) dan [`client/public/models/sariraga_yolo11n.onnx`](client/public/models/sariraga_yolo11n.onnx) |
 
 **Pipeline:** letterbox 640x640, normalisasi RGB 0 sampai 1, inferensi ONNX (`[1,3,640,640]` ke `[1,7,8400]`), filter keyakinan (default 0.25), NMS per kelas (IoU 0.45), lalu koordinat dikembalikan ke ukuran gambar asli.
@@ -159,7 +159,7 @@ curl http://localhost:5000/api/stats
 
 ## Deployment URL
 
-- Web app: **[diisi tim sebelum submit]**
+- Web app: **https://sariraga-apps.vercel.app**
 - AI service: URL Cloudflare Tunnel, dikirim lewat kanal panitia saat penjurian (berubah setiap restart). Tanpa AI service, web app tetap berfungsi penuh dengan inferensi di browser.
 
 ## Demo Account
@@ -174,7 +174,8 @@ Tidak diperlukan. Aplikasi bisa dipakai tanpa login.
 - Nilai Waste-to-Wealth adalah estimasi dari bobot rata-rata per item dan harga acuan, belum terhubung dengan timbangan.
 - Belum ada object tracking, jadi pada catat otomatis satu objek bisa tercatat lebih dari sekali.
 - Endpoint demo publik belum memakai autentikasi.
-- Inferensi di browser berjalan satu thread (WASM), sekitar 3 FPS. Untuk demo real-time disarankan memakai AI server.
+- Inferensi di browser sekitar 9 FPS di CPU (lebih cepat dengan WebGPU). Untuk demo real-time disarankan memakai AI server.
+- Tanpa Supabase, data hanya tersimpan di memori fungsi Vercel dan bisa hilang saat fungsi di-restart.
 
 ## Third-party Resources / Credits
 

@@ -1,10 +1,17 @@
 // client/api/detections.js: Vercel Function (also mounted by server/server.js)
 // GET  /api/detections?limit=20  -> recent detection logs (with visual evidence snapshot)
 // POST /api/detections           -> store one detection event + server-side Waste-to-Wealth valuation
-import { insertDetection, listDetections, parseDetectionPayload, sendError } from './_lib/waste.js';
+// GET  /api/detections?view=stats -> same payload as /api/stats. The dashboard uses this route because on
+//      Vercel each api/*.js file is a separate function; without Supabase (in-memory demo mode) only this
+//      function holds the logged rows, so stats must be computed here to match the history.
+import { computeStats, insertDetection, listDetections, parseDetectionPayload, sendError } from './_lib/waste.js';
 
 export default async function handler(req, res) {
   try {
+    if (req.method === 'GET' && req.query?.view === 'stats') {
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(200).json({ status: 'success', data: await computeStats() });
+    }
     if (req.method === 'GET') {
       const limit = Math.min(100, Math.max(1, Number(req.query?.limit) || 20));
       return res.status(200).json({ status: 'success', data: await listDetections(limit) });

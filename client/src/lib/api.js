@@ -8,7 +8,7 @@ async function request(path, options) {
   return json.data;
 }
 
-export const fetchStats = () => request('/api/stats');
+export const fetchStats = () => request('/api/detections?view=stats'); // same function as the log store, see api/detections.js
 export const fetchLogs = (limit = 20) => request(`/api/detections?limit=${limit}`);
 export const postLog = (payload) =>
   request('/api/detections', {

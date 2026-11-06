@@ -26,7 +26,11 @@ const BROWSER_MODEL_NAME = 'SariRaga YOLO11n (WaRP)';
 const BROWSER_CLASSES = ['botol', 'kaleng', 'kardus']; // model idx -> category
 const SIZE = 640;
 
-ort.env.wasm.wasmPaths = `https://cdn.jsdelivr.net/npm/onnxruntime-web@${ort.env.versions.web}/dist/`;
+// ORT runtime files are served as-is from /ort/ (copied by scripts/copy-ort.mjs before dev/build).
+// Same origin is required for the worker threads of multi-threaded WASM.
+ort.env.wasm.wasmPaths = '/ort/';
+// Multi-threaded WASM needs cross-origin isolation (COOP/COEP headers in vercel.json / vite.config.js).
+ort.env.wasm.numThreads = globalThis.crossOriginIsolated ? Math.min(4, navigator.hardwareConcurrency || 4) : 1;
 
 // ---------- server engine ----------
 export async function checkServer() {
@@ -52,8 +56,26 @@ async function detectServer(canvas, conf) {
 
 // ---------- browser engine ----------
 let sessionPromise = null;
+export let browserBackend = 'wasm'; // 'webgpu' when the GPU path loaded
+
+// Try WebGPU first (GPU, much faster), fall back to WASM on CPU. Model bytes are fetched once.
+async function createSession() {
+  const model = new Uint8Array(await (await fetch(BROWSER_MODEL_URL)).arrayBuffer());
+  if (navigator.gpu) {
+    try {
+      const s = await ort.InferenceSession.create(model, { executionProviders: ['webgpu'] });
+      browserBackend = 'webgpu';
+      return s;
+    } catch (e) {
+      console.warn('WebGPU tidak tersedia, memakai WASM:', e.message);
+    }
+  }
+  browserBackend = 'wasm';
+  return ort.InferenceSession.create(model, { executionProviders: ['wasm'] });
+}
+
 function getSession() {
-  sessionPromise ??= ort.InferenceSession.create(BROWSER_MODEL_URL, { executionProviders: ['wasm'] }).catch((e) => {
+  sessionPromise ??= createSession().catch((e) => {
     sessionPromise = null;
     throw e;
   });

@@ -48,3 +48,6 @@ Thumbs.db
 
 # Vercel
 .vercel
+
+# onnxruntime-web runtime, copied from node_modules by scripts/copy-ort.mjs
+client/public/ort/
