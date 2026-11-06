@@ -64,7 +64,7 @@ Kode AI utama: [`ai_service/services/detector.py`](ai_service/services/detector.
 
 - Frame kamera hanya dianalisis dan tidak disimpan, baik di browser maupun di AI server.
 - Pada mode browser, gambar tidak keluar dari perangkat pengguna. Pada mode server, frame dikirim ke AI service milik tim untuk diproses lalu dibuang.
-- Yang disimpan ke database hanya hasil deteksi (kategori, keyakinan, bounding box) dan thumbnail 320 px, dan hanya saat pengguna menekan "Catat ke log" atau menyalakan catat otomatis.
+- Yang disimpan ke database hanya hasil deteksi (kategori, keyakinan, bounding box) dan thumbnail 240 px, dan hanya saat pengguna menekan "Catat ke log" atau menyalakan catat otomatis.
 - Supabase memakai Row Level Security tanpa policy publik. Hanya server (service_role key di environment variable) yang bisa membaca dan menulis.
 - Nilai Rupiah adalah estimasi, bukan hasil timbangan, dan dijelaskan sebagai estimasi di aplikasi.
 

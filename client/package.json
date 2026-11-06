@@ -8,6 +8,7 @@
     "dev": "vite",
     "prebuild": "node scripts/copy-ort.mjs",
     "build": "vite build",
+    "postbuild": "node scripts/prune-ort.mjs",
     "lint": "oxlint",
     "preview": "vite preview"
   },

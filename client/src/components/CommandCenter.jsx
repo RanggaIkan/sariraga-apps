@@ -111,8 +111,11 @@ export default function CommandCenter({ engine, setEngine, serverHealth, checkin
   const paint = useCallback((dets) => {
     const frame = frameRef.current, disp = displayRef.current;
     if (!disp || !frame.width) return;
-    disp.width = frame.width;
-    disp.height = frame.height;
+    // Resizing a canvas reallocates its buffer, so only do it when the frame size changes.
+    if (disp.width !== frame.width || disp.height !== frame.height) {
+      disp.width = frame.width;
+      disp.height = frame.height;
+    }
     const ctx = disp.getContext('2d');
     ctx.drawImage(frame, 0, 0);
     drawDetections(ctx, dets);
@@ -124,8 +127,8 @@ export default function CommandCenter({ engine, setEngine, serverHealth, checkin
     try {
       const disp = displayRef.current;
       const thumb = document.createElement('canvas');
-      const s = 320 / disp.width;
-      thumb.width = 320;
+      const s = 240 / disp.width;
+      thumb.width = 240;
       thumb.height = Math.round(disp.height * s);
       thumb.getContext('2d').drawImage(disp, 0, 0, thumb.width, thumb.height);
       const { engine: eng } = stateRef.current;
@@ -135,7 +138,7 @@ export default function CommandCenter({ engine, setEngine, serverHealth, checkin
         model: engineModelName(eng, serverHealth),
         inference_ms: stateRef.current.perfMs,
         items: dets,
-        snapshot: thumb.toDataURL('image/jpeg', 0.7),
+        snapshot: thumb.toDataURL('image/jpeg', 0.6),
       });
       setSession((p) => ({ logs: p.logs + 1, items: p.items + row.total_items, value: p.value + row.total_value_idr }));
       showToast(`Dicatat ke log: ${row.total_items} item, ${formatIdr(row.total_value_idr)}, +${row.points} poin`);

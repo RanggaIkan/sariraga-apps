@@ -368,7 +368,7 @@ export default function Dashboard({ refreshKey }) {
 
   useEffect(() => {
     load();
-    const id = setInterval(load, 15000);
+    const id = setInterval(() => { if (!document.hidden) load(); }, 15000); // skip polling while the tab is hidden
     return () => clearInterval(id);
   }, [refreshKey]);
 
