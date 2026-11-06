@@ -9,14 +9,11 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     proxy: {
-      '/api': {
+      // Dev only: forward API calls to the local Express server (same handlers as Vercel Functions).
+      // Regex so source modules under /api/_lib are still served by Vite.
+      '^/api/(detections|stats|health)': {
         target: 'http://localhost:5000',
         changeOrigin: true,
-      },
-      '/ai': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/ai/, ''),
       },
     },
   },
